@@ -1,7 +1,7 @@
 <!--
  * @Author: sherlyzz
  * @Date: 2022-01-29
- * @LastEditTime: 2022-01-29
+ * @LastEditTime: 2022-02-10
  * @LastEditors: sherlyzz
  * @Description: 介绍还原 Git 中提交的方法
 -->
@@ -85,7 +85,7 @@ Git 仓库包含 3 个提交, 分别为 A, B, C. 提交 B 包含对 file1, file2
 
    `git checkout master`
 
-   至此, 还原完成, 过程参考 [git-learn](https://github.com/Pony-Zhang/git-learn) `commit: f3524fc8425f16dc6e830eaf5dadb639b404e3b8` - `commit: 1aefec7325b1f5953246551e6ebd1d099e6abb00` 
+   至此, 还原完成, 过程参考 [git-learn](https://github.com/sherlinz0/git-learn) `commit: f3524fc8425f16dc6e830eaf5dadb639b404e3b8` - `commit: 1aefec7325b1f5953246551e6ebd1d099e6abb00` 
 
 ## 整个还原
 
