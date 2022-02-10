@@ -1,7 +1,7 @@
 <!--
  * @Author: sherlyzz
  * @Date: 2022-02-09
- * @LastEditTime: 2022-02-09
+ * @LastEditTime: 2022-02-10
  * @LastEditors: sherlyzz
  * @Description: README.md
 -->
@@ -9,6 +9,10 @@
 # 前端学习记录
 
 **记录前端学习过程**
+
+- **学习记录**
+
+  - [LeetCode 每日刷题](/记录/LeetCode每日.md) 
 
 - [前端学习路线](/学习路线.md)
     
