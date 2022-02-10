@@ -1,7 +1,7 @@
 <!--
  * @Author: sherlyzz
  * @Date: 2022-02-10
- * @LastEditTime: 2022-02-10
+ * @LastEditTime: 2022-02-11
  * @LastEditors: sherlyzz
  * @Description: LeetCode 每日刷题记录
 -->
@@ -10,7 +10,7 @@
 
 LeetCode 的每日刷题记录, 记录题解以及思路.
 
-## 2020-02-10
+## 2022-02-10
 
 ### [两数之和](https://leetcode-cn.com/problems/two-sum/)
 
