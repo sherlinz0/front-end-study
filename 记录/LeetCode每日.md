@@ -131,3 +131,319 @@ LeetCode 的每日刷题记录, 记录题解以及思路.
             return result;
         };
     ```
+
+## 2022-02-11
+
+### [有序数组中的单一元素](https://leetcode-cn.com/problems/single-element-in-a-sorted-array/)
+
+- 二分查找
+
+  根据题目提示, 时间复杂度为 O(logn), 且数组为有序的, 所以使用二分查找.\
+  目标值最明确的一个特征是该值两侧的元素数量都为偶数, 所以根据这个特征, 将 nums[mid] 与 nums[mid + 1], nums[mid - 1] 比较, 调整左右边界, 直至找出目标.
+
+  ```javascript
+  /**
+   * @param {number[]} nums
+   * @return {number}
+   */
+  var singleNonDuplicate = function(nums) {
+      let len = nums.length;
+      let mid = Math.floor(len / 2);
+  
+      // 当数组只有一个元素时, 该元素就是目标元素
+      if(len === 1) {
+          return nums[0];
+      }
+  
+      // 判断 mid 为偶数还是奇数
+      if(mid % 2 === 0) {
+          // 判断 mid 与左右两侧的关系
+          // 调整边界, 递归调用
+          if(nums[mid] === nums[mid - 1]) return singleNonDuplicate(nums.slice(0, mid + 1));
+          else if(nums[mid] === nums[mid + 1]) return singleNonDuplicate(nums.slice(mid));
+          else return nums[mid];
+      } else {
+          if(nums[mid] === nums[mid + 1]) return singleNonDuplicate(nums.slice(0, mid));
+          else if(nums[mid] === nums[mid - 1]) return singleNonDuplicate(nums.slice(mid + 1));
+      }
+  };
+  ```
+
+### [数组中数字出现的次数](https://leetcode-cn.com/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-lcof/)
+
+- 哈希映射
+
+  使用一个哈希表来记录每个元素出现的次数, 最后遍历这个哈希表, 将出现次数为 1 的元素添加到数组中.
+
+  ```javascript
+  /**
+   * @param {number[]} nums
+   * @return {number[]}
+   */
+  var singleNumbers = function(nums) {
+      // 哈希映射, key 为 元素值, value 为 元素值状态, 0 为 出现两次， 1 为出现 一次
+      let map = {};
+      let result = [];
+  
+      for(let e of nums) {
+          // 更新状态
+          if(!map[e]) map[e] = 1;
+          else map[e] = 0;
+      }
+  
+      // 便利 map 属性, 访问 value, 将 value 为 1 的添加到数组中
+      for(let e in map) {
+          if(map[e]) result.push(e);
+      }
+  
+      return result;
+  };
+  ```
+
+### [只出现一次的数字 II](https://leetcode-cn.com/problems/single-number-ii/)
+
+- 哈希映射
+
+  使用一个哈希表来记录每个元素出现的次数, 最后遍历这个哈希表, 将出现次数为 1 的元素添加到数组中.
+
+  ```javascript
+  /**
+   * @param {number[]} nums
+   * @return {number}
+   */
+  var singleNumber = function(nums) {
+      let map = new Map();
+      let result = [];
+  
+      for(let e of nums) {
+          if(map.has(e)) {
+              let counter = map.get(e);
+              counter++;
+              map.set(e, counter);
+          } else {
+              map.set(e, 1);
+          }
+      }
+      
+      for(let [key, value] of map) {
+          if (value === 1) result.push(key);
+      }
+  
+      return result;
+  };
+  ```
+
+### 小结: 记录数组中元素出现的次数都可以用哈希表来记录, 最简单的方法．
+
+## 2022-02-12
+
+### [存在重复元素](https://leetcode-cn.com/problems/contains-duplicate/)
+
+- Set 类型去重
+
+  ```javascript
+  /**
+   * @param {number[]} nums
+   * @return {boolean}
+   */
+  var containsDuplicate = function(nums) {
+      // 先用 Set 去重, 再将 Set 转化为数组, 最后比较 length
+      return Array.from(new Set(nums).keys()).length !== nums.length;
+  };
+  ```
+
+- 排序, 左右判重
+
+  先将数组排序, 这时每次访问数组元素时只需判断该元素与左侧或右侧相邻元素是否相等即可
+
+  ```javascript
+  /**
+   * @param {number[]} nums
+   * @return {boolean}
+   */
+  var containsDuplicate = function(nums) {
+      nums.sort();
+      for(let i = 0; i < nums.length - 1; i++) {
+          if(nums[i] === nums[i + 1]) return true;
+      }
+      return false;
+  };
+  ```
+
+### [最大子数组和](https://leetcode-cn.com/problems/maximum-subarray/)
+
+- 维护最大值
+
+  ```javascript
+  /**
+   * @param {number[]} nums
+   * @return {number}
+   */
+  var maxSubArray = function(nums) {
+      // 用一个 pre 来暂时记录子数组的和
+      let pre = 0;
+      // 避免出现只有一个元素且为负数而 sum = 0
+      let sum = -Infinity;
+  
+      for(let i = 0; i < nums.length; i++) {
+          pre = pre + nums[i];
+  
+          if(pre > sum) sum = pre;
+          // 当 pre 小于 0 时, 直接丢弃之前的状态, 更新 pre 为 0
+          if(pre < 0) pre = 0;
+      }
+      return sum;
+  };
+  ```
+
+### [买卖股票的最佳时机](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
+
+- 维护 最大利益 和 最小价格
+
+  要找到最大差值, 我们只需更新最小价格, 每次访问数组元素时, 将元素值减去最小价格, 若大于最大利益, 则更新最大利益.   
+
+  ```javascript
+  /**
+   * @param {number[]} prices
+   * @return {number}
+   */
+  var maxProfit = function(prices) {
+            let lowestPrice = prices[0];
+            let maxProfit = 0;
+  
+            for(let price of prices) {
+              if(price < lowestPrice) lowestPrice = price;
+              if(price - lowestPrice > maxProfit) maxProfit = price - lowestPrice;
+            }
+  
+            return maxProfit;
+          };
+  ```
+
+### 小结: 买卖股票的最佳时机 是 基于最大子数组 和的改编, 两个题的思想都是要维护状态, 用先前状态与目前状态比较, 更新状态.
+
+## 2022-02-13
+
+### [两个数组的交集 II](https://leetcode-cn.com/problems/intersection-of-two-arrays-ii/)
+
+- 两层循环
+
+  两层循环比较元素, Array.prototype.splice() 去除 nums2 已相等的元素  
+
+  ```javascript
+  /**
+   * @param {number[]} nums1
+   * @param {number[]} nums2
+   * @return {number[]}
+   */
+  var intersect = function(nums1, nums2) {
+      let result = [];
+  
+      for(let e of nums1) {
+          for(let i = 0; i< nums2.length; i++) {
+              if(e === nums2[i]) {
+                  result.push(e);
+                  nums2.splice(i, 1);
+                  break;
+              }
+          }
+      }
+  
+      return result;
+  };
+  ```
+  
+- 排序 + 双指针
+
+  先排序, 之后利用双指针来比较元素.
+
+  ```javascript
+  /**
+   * @param {number[]} nums1
+   * @param {number[]} nums2
+   * @return {number[]}
+   */
+  var intersect = function(nums1, nums2) {
+      let result = [];
+      // 定义两个指针
+      let i1 = 0, i2 = 0;
+      // 定义排序方法
+      let sortMethod = (a, b) => a - b;
+  
+      nums1.sort(sortMethod); nums2.sort(sortMethod);
+  
+      while(i1 < nums1.length && i2 < nums2.length) {
+          // 当 nums1[i1] < nums2[i2] 时, 需要移动指针 i1 至 nums1[i1] >= nums2[i2], 直接将前面的排除掉, 不可能相等
+          while(nums1[i1] < nums2[i2]) i1++;
+  
+          if(nums1[i1] === nums2[i2]) {
+              result.push(nums1[i1]);
+              i1++; i2++;
+          }else {
+              // nums1[i1] > nums2[i2] 时, 指针 i2 向后移动一位
+              i2++;
+          }
+      }
+  
+      return result;
+  };
+  ```
+
+### [重塑矩阵](https://leetcode-cn.com/problems/reshape-the-matrix/)
+
+- 数组扁平化
+
+  将 mat 扁平化, 用一个数组 temp 保存, 最后依次将 temp 中元素按 每次 c 个转移到 result 数组中.
+
+  ```javascript
+  /**
+   * @param {number[][]} mat
+   * @param {number} r
+   * @param {number} c
+   * @return {number[][]}
+   */
+  var matrixReshape = function(mat, r, c) {
+      if(mat.length * mat[0].length !== r * c) return mat;
+  
+      let result = [], temp = [];
+  
+      mat.forEach((row) => {
+          temp = temp.concat(row);
+      })
+  
+      while(temp.length !== 0) result.push(temp.splice(0, c));
+  
+      return result;
+  };
+  ```
+
+### [杨辉三角](https://leetcode-cn.com/problems/pascals-triangle/)
+
+- 模拟
+
+  模拟每一步, 直接求解
+
+  ```javascript
+  /**
+   * @param {number} numRows
+   * @return {number[][]}
+   */
+  var generate = function(numRows) {
+            let result = [];
+  
+            for(let i1 = 0; i1 < numRows; i1++) {
+              if(i1 < 2) result.push(Array(i1 + 1).fill(1));
+              else {
+                let row = Array(i1 + 1).fill(1);
+  
+                for(let i2 = 1; i2 < i1; i2++) {
+                  row[i2] = result[i1 - 1][i2 - 1] + result[i1 - 1][i2];
+                }
+  
+                result.push(row);
+              }
+            }
+  
+            return result;
+          };
+  ```
