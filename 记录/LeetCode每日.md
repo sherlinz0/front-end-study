@@ -1,7 +1,7 @@
 <!--
  * @Author: sherlyzz
  * @Date: 2022-02-10
- * @LastEditTime: 2022-02-11
+ * @LastEditTime: 2022-02-14
  * @LastEditors: sherlyzz
  * @Description: LeetCode 每日刷题记录
 -->
@@ -17,6 +17,7 @@ LeetCode 的每日刷题记录, 记录题解以及思路.
 - 使用 Array.prototype.indexOf()
 
     遍历数组中每一个元素, 使用 Array.prototype.indexOf() 来确定 `target - nums[i]` 值存在与否.
+
     ```javascript
     /**
      * @param {number[]} nums
@@ -37,6 +38,7 @@ LeetCode 的每日刷题记录, 记录题解以及思路.
 - 哈希映射
 
     遍历数组中每一个元素, 建一个空 map, 每次访问元素时, 检查 map 中是否存在 `target - nums[i]` 这个键, 若不存在则将 `nums[i]: i` 键值对存入 map 中.
+
     ```javascript
     /**
      * @param {number[]} nums
@@ -88,48 +90,49 @@ LeetCode 的每日刷题记录, 记录题解以及思路.
 - 动态双指针 + 固定单指针
 
     先将数组排序, 用一个单指针指向外层循环访问的数组元素, 另外两个指针指向固定指针后面的两端. 过程中排除重复元素.
+
     ```javascript
     /**
      * @param {number[]} nums
      * @return {number[][]}
      */
     var threeSum = function(nums) {
-            const length = nums.length;
-            const result = [];
+        const length = nums.length;
+        const result = [];
     
-            // 源数组不满足条件, 直接返回
-            if(length < 3) return result;
+        // 源数组不满足条件, 直接返回
+        if(length < 3) return result;
     
-            // 先将数组排序
-            nums.sort((a, b) => a - b);
+        // 先将数组排序
+        nums.sort((a, b) => a - b);
     
-            for(let i = 0; i < length; i++) {
-                // 若 nums[i] > 0, nums[L] 和 nums[R] 必定大于 0
-                if(nums[i] > 0) break;
-                // 当 nums[i] 和 nums[i - 1] 相等时, 跳过, 排除重复
-                if(i > 0 && nums[i] === nums[i - 1]) continue;
+        for(let i = 0; i < length; i++) {
+            // 若 nums[i] > 0, nums[L] 和 nums[R] 必定大于 0
+            if(nums[i] > 0) break;
+            // 当 nums[i] 和 nums[i - 1] 相等时, 跳过, 排除重复
+            if(i > 0 && nums[i] === nums[i - 1]) continue;
     
-                let L = i + 1;
-                let R = length - 1;
+            let L = i + 1;
+            let R = length - 1;
     
-                while(L < R) {
-                    const sum = nums[i] + nums[L] + nums[R];
+            while(L < R) {
+                const sum = nums[i] + nums[L] + nums[R];
     
-                    if(sum === 0) {
-                        result.push([nums[i], nums[L], nums[R]]);
+                if(sum === 0) {
+                    result.push([nums[i], nums[L], nums[R]]);
                         
-                        // 排除重复
-                        while(L < R && nums[L] === nums[++L]);
-                        while(L < R && nums[R] === nums[--R]);
-                    }
-                    // 移动 L, R
-                    else if(sum < 0) L++;
-                    else if(sum > 0) R--;
+                    // 排除重复
+                    while(L < R && nums[L] === nums[++L]);
+                    while(L < R && nums[R] === nums[--R]);
+                }
+                // 移动 L, R
+                else if(sum < 0) L++;
+                else if(sum > 0) R--;
                 }
             }
-    
-            return result;
-        };
+        
+        return result;
+    };
     ```
 
 ## 2022-02-11
@@ -233,7 +236,9 @@ LeetCode 的每日刷题记录, 记录题解以及思路.
   };
   ```
 
-### 小结: 记录数组中元素出现的次数都可以用哈希表来记录, 最简单的方法．
+### 小结
+
+记录数组中元素出现的次数都可以用哈希表来记录, 最简单的方法．
 
 ## 2022-02-12
 
@@ -301,26 +306,28 @@ LeetCode 的每日刷题记录, 记录题解以及思路.
 - 维护 最大利益 和 最小价格
 
   要找到最大差值, 我们只需更新最小价格, 每次访问数组元素时, 将元素值减去最小价格, 若大于最大利益, 则更新最大利益.   
-
+  
   ```javascript
   /**
    * @param {number[]} prices
    * @return {number}
    */
   var maxProfit = function(prices) {
-            let lowestPrice = prices[0];
-            let maxProfit = 0;
+      let lowestPrice = prices[0];
+      let maxProfit = 0;
   
-            for(let price of prices) {
-              if(price < lowestPrice) lowestPrice = price;
-              if(price - lowestPrice > maxProfit) maxProfit = price - lowestPrice;
-            }
+      for(let price of prices) {
+          if(price < lowestPrice) lowestPrice = price;
+          if(price - lowestPrice > maxProfit) maxProfit = price - lowestPrice;
+      }
   
-            return maxProfit;
-          };
+      return maxProfit;
+  };
   ```
 
-### 小结: 买卖股票的最佳时机 是 基于最大子数组 和的改编, 两个题的思想都是要维护状态, 用先前状态与目前状态比较, 更新状态.
+### 小结
+
+买卖股票的最佳时机 是 基于最大子数组 和的改编, 两个题的思想都是要维护状态, 用先前状态与目前状态比较, 更新状态.
 
 ## 2022-02-13
 
@@ -429,21 +436,145 @@ LeetCode 的每日刷题记录, 记录题解以及思路.
    * @return {number[][]}
    */
   var generate = function(numRows) {
-            let result = [];
+	  let result = [];
   
-            for(let i1 = 0; i1 < numRows; i1++) {
-              if(i1 < 2) result.push(Array(i1 + 1).fill(1));
-              else {
-                let row = Array(i1 + 1).fill(1);
+	  for(let i1 = 0; i1 < numRows; i1++) {
+		  if(i1 < 2) result.push(Array(i1 + 1).fill(1));
+		  else {
+			  let row = Array(i1 + 1).fill(1);
   
-                for(let i2 = 1; i2 < i1; i2++) {
-                  row[i2] = result[i1 - 1][i2 - 1] + result[i1 - 1][i2];
-                }
+			  for(let i2 = 1; i2 < i1; i2++) {
+                row[i2] = result[i1 - 1][i2 - 1] + result[i1 - 1][i2];
+			  }
   
-                result.push(row);
-              }
-            }
-  
-            return result;
-          };
+			  result.push(row);
+		  }
+	  }
+	  return result;
+  };
   ```
+
+## 2022-02-14
+
+### [最大数](https://leetcode-cn.com/problems/largest-number/)
+
+- 局部最大
+
+  ```javascript
+  /**
+   * @param {number[]} nums
+   * @return {string}
+   */
+  var largestNumber = function(nums) {
+      // 排序方法: 使局部最大, [b, a], 使得 String(b) + String(a) > String(a) + String(b)
+      const sortMethod = (a, b) => {
+          const string1 = String(a) + String(b);
+          const string2 = String(b) + String(a);
+  
+          if(string1 < string2 || string1 === string2) return 0;
+          else return -1;
+      };
+      
+      nums.sort(sortMethod);
+  
+      // String -> BigInt( 不使用 parseInt(), 防止出现大数, 同时当 [0, 0]时, 能除去多余的 0 ) -> String( 题目要求 )
+      return String(BigInt(nums.join('')));
+  };
+  ```
+
+### [反转字符串](https://leetcode-cn.com/problems/reverse-string/)
+
+- 组合 API
+
+  ```javascript
+  /**
+   * @param {character[]} s
+   * @return {void} Do not return anything, modify s in-place instead.
+   */
+  var reverseString = function(s) {
+      return s.reverse().join('');
+  };
+  ```
+
+- 双指针
+
+  用两个指针分别指向字符串头和尾, 再利用 解构赋值 进行交换.
+
+  ```javascript
+  /**
+   * @param {character[]} s
+   * @return {void} Do not return anything, modify s in-place instead.
+   */
+  var reverseString = function(s) {
+      let beginIndex = 0;
+      let endIndex = s.length - 1;
+  
+      while(beginIndex < endIndex) {
+          [s[beginIndex], s[endIndex]] = [s[endIndex], s[beginIndex]];
+          beginIndex++;
+          endIndex--;
+      }
+  };
+  ```
+
+### [验证回文串](https://leetcode-cn.com/problems/valid-palindrome/)
+
+- 正则匹配 + 数组反转
+
+  先使用正则匹配处理无关字符, 之后使用 reverse() 反转字符数组, 最后转化为字符串进行比较.
+
+  ```javascript
+  /**
+   * @param {string} s
+   * @return {boolean}
+   */
+  var isPalindrome = function(s) {
+      let newStr = s.toLowerCase().match(/[a-z0-9]+/g);
+      // 空字符串直接返回 true
+      if(!newStr) return true;
+      // String === (String -> Array -> Array -> String)
+      return newStr.join('') === newStr.join('').split('').reverse().join('');
+  };
+  ```
+
+- 双指针 + 字符判断函数
+
+  若遇到无效字符, 则移动双指针跳过
+
+  ```javascript
+  /**
+   * @param {string} s
+   * @return {boolean}
+   */
+  var isPalindrome = function(s) {
+            // 消除大小写影响
+      const newStr = s.toLocaleLowerCase();
+      let beginIndex = 0;
+      let endIndex = s.length - 1;
+  
+      while(beginIndex < endIndex) {
+          if(!isValid(newStr.charAt(beginIndex))) {
+              beginIndex++;
+              continue;
+          }
+          if(!isValid(newStr.charAt(endIndex))) {
+              endIndex--;
+              continue;
+          }
+          if(newStr.charAt(beginIndex) !== newStr.charAt(endIndex)) return false;
+        
+          beginIndex++;
+          endIndex--;
+      }
+      return true;
+  };
+  
+  // 判断字符是否在 字母 / 数组范围内 ( 是否有效 )
+  const isValid = (str) => str >= 'a' && str <= 'z' || str >= '0' && str <= '9';
+  ```
+
+### 小结
+
+- 最大数采用了 局部到整体 的思想, 先局部实现最大, 最后整体实现最大.
+- 反转字符串类的题, 可以使用 `String.prototype.split('')` + `Array.prototype.reverse()` + `Array.prototype.join('')` 三件套实现 `String -> Array -> Array ( reversed ) -> String ( reversed )` 的转化.
+- 验证回文串最简单的方法是 正则匹配 + 数组反转 的组合.
