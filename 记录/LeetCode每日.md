@@ -1,11 +1,3 @@
-<!--
- * @Author: sherlyzz
- * @Date: 2022-02-10
- * @LastEditTime: 2022-02-14
- * @LastEditors: sherlyzz
- * @Description: LeetCode 每日刷题记录
--->
-
 # LeetCode 每日
 
 LeetCode 的每日刷题记录, 记录题解以及思路.
@@ -547,8 +539,8 @@ LeetCode 的每日刷题记录, 记录题解以及思路.
    * @return {boolean}
    */
   var isPalindrome = function(s) {
-            // 消除大小写影响
-      const newStr = s.toLocaleLowerCase();
+	  // 消除大小写影响
+      const newStr = s.toLowerCase();
       let beginIndex = 0;
       let endIndex = s.length - 1;
   
@@ -578,3 +570,105 @@ LeetCode 的每日刷题记录, 记录题解以及思路.
 - 最大数采用了 局部到整体 的思想, 先局部实现最大, 最后整体实现最大.
 - 反转字符串类的题, 可以使用 `String.prototype.split('')` + `Array.prototype.reverse()` + `Array.prototype.join('')` 三件套实现 `String -> Array -> Array ( reversed ) -> String ( reversed )` 的转化.
 - 验证回文串最简单的方法是 正则匹配 + 数组反转 的组合.
+
+## 2022-02-15
+
+### [反转字符串 II](https://leetcode-cn.com/problems/reverse-string-ii/)
+
+- 模拟 + 组合 API
+
+  直接模拟操作, 使用组合 API 对字符串进行反转
+
+  ```JavaScript
+  /**
+   * @param {string} s
+   * @param {number} k
+   * @return {string}
+   */
+  var reverseStr = function(s, k) {
+      const length = s.length;
+      let newStr = '';
+      let i = 2 * k;
+  
+      for(; i <= length; i += 2 * k) {
+          newStr += s.slice(i - 2 * k, i - k).split('').reverse().join('') + s.slice(i - k, i);
+      }
+      
+      // 回退上一个状态
+      i -= 2 * k;
+      
+      if(length - i < k) newStr += s.slice(i).split('').reverse().join('');
+      if(length - i < k * 2 && length - i >= k) newStr += s.slice(i, i + k).split('').reverse().join('') + s.slice(i + k);
+  
+      return newStr;
+  };
+  ```
+
+### [验证回文字符串 Ⅱ](https://leetcode-cn.com/problems/valid-palindrome-ii/)
+
+- 两次验证
+
+  ```JavaScript
+  /**
+   * @param {string} s
+   * @return {boolean}
+   */
+  var validPalindrome = function(s) {
+            // 定义双指针
+            let leftPointer = 0;
+            let rightPointer = s.length - 1;
+  
+            while(leftPointer < rightPointer) {
+              // 当左右指针指向的值不相等时, 去掉一个元素再进行判断
+              if(s.charAt(leftPointer) !== s.charAt(rightPointer)) 
+                  return isPalindrome(s.slice(leftPointer + 1, rightPointer + 1)) || isPalindrome(s.slice(leftPointer, rightPointer));
+  
+              leftPointer++;
+              rightPointer--;
+            }
+  
+            return true;
+          };
+  
+  const isPalindrome = (s) => {
+    // 定义双指针
+    let leftPointer = 0;
+    let rightPointer = s.length - 1;
+  
+    while(leftPointer < rightPointer) {
+      if(s.charAt(leftPointer++) !== s.charAt(rightPointer--)) return false;
+    }
+    return true;
+  }
+  ```
+
+### [字符串中的第一个唯一字符](https://leetcode-cn.com/problems/first-unique-character-in-a-string/)
+
+- 哈希映射
+
+  利用哈希表存储每个字母出现次数
+
+  ```JavaScript
+  /**
+   * @param {string} s
+   * @return {number}
+   */
+  var firstUniqChar = function(s) {
+      const appearTimes = new Map();
+  
+      for(let c of s) {
+          if(appearTimes.has(c)) appearTimes.set(c, appearTimes.get(c) + 1);
+          else appearTimes.set(c, 1);
+      }
+  
+      for(let [char, time] of appearTimes) {
+          if(time === 1) return s.indexOf(char);
+      }
+  
+      return -1;
+  };
+  ```
+  
+### 小结
+
+题目都比较简单, 有时候可以模拟操作, 直接解题.
