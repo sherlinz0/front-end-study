@@ -672,3 +672,104 @@ LeetCode 的每日刷题记录, 记录题解以及思路.
 ### 小结
 
 题目都比较简单, 有时候可以模拟操作, 直接解题.
+
+## 2022-02-16 
+
+### [赎金信](https://leetcode-cn.com/problems/ransom-note/)
+
+- 哈希映射
+
+  建立一个哈希表 `lettersPool`, 用于存放 `magazine` 中出现的 字母 以及 对应数量
+
+  ```javascript
+  /**
+   * @param {string} ransomNote
+   * @param {string} magazine
+   * @return {boolean}
+   */
+  var canConstruct = function(ransomNote, magazine) {
+      const lettersPool = new Map();
+      
+      for(let letter of magazine) {
+          if(lettersPool.has(letter)) {
+              lettersPool.set(letter, lettersPool.get(letter) + 1);
+          } else {
+              lettersPool.set(letter, 1);
+          }
+      }
+  
+      for(let letter of ransomNote) {
+          if(lettersPool.has(letter)) {
+              const rest = lettersPool.get(letter);
+  
+              if(rest === 0) return false;
+  
+              lettersPool.set(letter, lettersPool.get(letter) - 1);
+          } else {
+              return false;
+          }
+      }
+      
+      return true;
+  };
+  ```
+
+### [有效的字母异位词](https://leetcode-cn.com/problems/valid-anagram/)
+
+- 排序比较
+
+  ```javascript
+  /**
+   * @param {string} s
+   * @param {string} t
+   * @return {boolean}
+   */
+  var isAnagram = function(s, t) {
+            if(s.length !== t.length) return false;
+  
+            const lettersOfS = s.split('').sort();
+            const lettersOfT = t.split('').sort();
+  
+            for(let i = 0; i < lettersOfS.length; i++) {
+              if(lettersOfS[i] !== lettersOfT[i]) return false;
+            }
+  
+            return true;
+          };
+  ```
+
+- 哈希映射
+
+  这种方法我的以往题解写的比较多, 这里就不再写了.
+
+### [将字符串拆分为若干长度为 k 的组](https://leetcode-cn.com/problems/divide-a-string-into-groups-of-size-k/)
+
+- 模拟
+
+  简单模拟操作
+
+  ```javascript
+  /**
+   * @param {string} s
+   * @param {number} k
+   * @param {character} fill
+   * @return {string[]}
+   */
+  var divideString = function(s, k, fill) {
+            const result = [];
+            const fillNumber = k - s.length % k;
+  
+            for(let i = k; i <= s.length; i += k) {
+              result.push(s.slice(i - k, i));
+            }
+  
+            if(fillNumber !== 0 && fillNumber !== k) result.push(s.slice(s.length - s.length % k) + Array(fillNumber).fill(fill).join(''));
+  
+            return result;
+          };
+  ```
+
+### 小结
+
+- 出现次数之类的题可以用哈希表来搞定
+- 字符串和数组之间的关系十分紧密, 在需要时可以相互转化.
