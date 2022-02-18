@@ -1,10 +1,3 @@
-<!--
- * @Author: sherlyzz
- * @Date: 2022-02-07
- * @LastEditTime: 2022-02-07
- * @LastEditors: sherlyzz
- * @Description: 彻底搞懂 javascript 中的 this 指向问题
--->
 # 彻底搞懂 this 指向
 
 **想要理解 this, 先记住一下两点:**
@@ -31,8 +24,11 @@ this 的指向为什么会发生改变, this 指向的改变到底是什么时�
 在 JavaScript 中, `数组`, `函数`, `对象` 都是引用类型, 在参数传递时也就是引用传递.
 
 上面的例子中, `obj` 对象有两个属性, 但是属性的值类型是不同的, 在内存中的表现形式也是不同的.
+
 ![](https://pic1.zhimg.com/80/v2-d8344e9d298a58727e08d7a36ea4c8d0_720w.jpg)
+
 调用时就成了这个样子:
+
 ![](https://pic2.zhimg.com/80/v2-ddd9067ff2cbccbd380604d656775a4d_720w.jpg)
 
 再来看下面的例子:
@@ -54,6 +50,7 @@ A.f()   // 姓名：张三
 
 上面例子中, `A.f` 属性被赋给 `B.f`, 也就是 `A` 对象将匿名函数的地址赋给 `B` 对象.\
 那么在调用时, 函数分别根据运行环境的不同, 指向对象 `A` 和 `B`.
+
 ![](https://pic2.zhimg.com/80/v2-cbc152bda151b900e508a217cd4d2bb9_720w.jpg)
 
 再来看一个例子, 加深理解:
@@ -107,8 +104,8 @@ obj1.o1.fn(); // 2
 <script>
     var btn = document.getElementById('btn');
     btn.onclick = function(){
-        this;  // this指向本节点对象
-    }
+        console.log(this) // this指向本节点对象
+    };
 </script>
 ```
 
