@@ -773,3 +773,310 @@ LeetCode 的每日刷题记录, 记录题解以及思路.
 
 - 出现次数之类的题可以用哈希表来搞定
 - 字符串和数组之间的关系十分紧密, 在需要时可以相互转化.
+
+## 2022-02-17
+
+### [合并两个有序链表](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
+
+- 虚拟头节点 + 指针
+
+  ```javascript
+  /**
+   * Definition for singly-linked list.
+   * function ListNode(val, next) {
+   *     this.val = (val===undefined ? 0 : val)
+   *     this.next = (next===undefined ? null : next)
+   * }
+   */
+  /**
+   * @param {ListNode} list1
+   * @param {ListNode} list2
+   * @return {ListNode}
+   */
+  var mergeTwoLists = function(list1, list2) {
+    const dummyHead = new ListNode(0, list1);
+    let current = dummyHead;
+  
+    while(list1 !== null && list2 !== null) {
+      if(list1.val < list2.val) {
+        current.next = list1;
+        list1 = list1.next;
+      } else {
+        current.next = list2;
+        list2 = list2.next;
+      }
+      current = current.next;
+    }
+  
+    current.next = list1 === null? list2 : list1;
+  
+    return dummyHead.next;
+  };
+  ```
+
+- 递归法
+
+  ```javascript
+  /**
+   * Definition for singly-linked list.
+   * function ListNode(val, next) {
+   *     this.val = (val===undefined ? 0 : val)
+   *     this.next = (next===undefined ? null : next)
+   * }
+   */
+  /**
+   * @param {ListNode} list1
+   * @param {ListNode} list2
+   * @return {ListNode}
+   */
+  var mergeTwoLists = function(list1, list2) {
+      // 递归结束条件
+      if(list1 === null) return list2;
+      if(list2 === null) return list1;
+  
+      if(list1.val < list2.val) {
+          list1.next = mergeTwoLists(list1.next, list2);
+          return list1;
+      } else {
+          list2.next = mergeTwoLists(list1, list2.next);
+          return list2;
+      }
+  };
+  ```
+
+### [移除链表元素](https://leetcode-cn.com/problems/remove-linked-list-elements/)
+
+- 虚拟头节点
+
+  ```javascript
+  /**
+   * Definition for singly-linked list.
+   * function ListNode(val, next) {
+   *     this.val = (val===undefined ? 0 : val)
+   *     this.next = (next===undefined ? null : next)
+   * }
+   */
+  /**
+   * @param {ListNode} head
+   * @param {number} val
+   * @return {ListNode}
+   */
+  var removeElements = function(head, val) {
+    // 虚拟头节点
+    const dummyHead = new ListNode(0, head);
+    let current = dummyHead;
+  
+    while(current && current.next) {
+      // 只需找到要删除的节点的上一个节点
+      if(current.next.val === val) current.next = current.next.next;
+      else current = current.next;
+    }
+  
+    return dummyHead.next;
+  };
+  ```
+
+### [删除排序链表中的重复元素 II](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii/)
+
+- 虚拟头节点 + 循环判断相等
+
+  ```javascript
+  /**
+   * Definition for singly-linked list.
+   * function ListNode(val, next) {
+   *     this.val = (val===undefined ? 0 : val)
+   *     this.next = (next===undefined ? null : next)
+   * }
+   */
+  /**
+   * @param {ListNode} head
+   * @return {ListNode}
+   */
+  var deleteDuplicates = function(head) {
+      if(!(head && head.next)) return head;
+  
+      const dummyHead = new ListNode(0, head);
+      let current = dummyHead;
+  
+      while(current.next && current.next.next) {
+          if(current.next.val === current.next.next.val) {
+              const val = current.next.val;
+  
+              while(current.next && current.next.val === val) {
+                  current.next = current.next.next;
+              }
+          } else {
+              current = current.next;
+          }
+      }
+  
+      return dummyHead.next;
+  };
+  ```
+
+- 哈希表 + 两次遍历
+
+## 2022-02-18 
+
+### [删除链表中的结点](https://leetcode-cn.com/problems/delete-node-in-a-linked-list/)
+
+- 直接修改值和下一个节点
+
+  ```javascript
+  /**
+   * Definition for singly-linked list.
+   * function ListNode(val) {
+   *     this.val = val;
+   *     this.next = null;
+   * }
+   */
+  /**
+   * @param {ListNode} node
+   * @return {void} Do not return anything, modify node in-place instead.
+   */
+  var deleteNode = function(node) {
+      node.val = node.next.val;
+      node.next = node.next.next;
+  };
+  ```
+
+### [删除链表的倒数第 N 个结点](https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/)
+
+- 记录长度 + 两次遍历
+
+  ```javascript
+  /**
+   * Definition for singly-linked list.
+   * function ListNode(val, next) {
+   *     this.val = (val===undefined ? 0 : val)
+   *     this.next = (next===undefined ? null : next)
+   * }
+   */
+  /**
+   * @param {ListNode} head
+   * @param {number} n
+   * @return {ListNode}
+   */
+  var removeNthFromEnd = function(head, n) {
+    const dummyHead = new ListNode(0, head);
+    let current = dummyHead;
+    let length = 0;
+    let index = 0;
+  
+    while(current.next) {
+      length++;
+      current = current.next;
+    }
+  
+    current = dummyHead;
+  
+    while(length && current.next) {
+      if(length - index === n) {
+        current.next = current.next.next;
+        return dummyHead.next;
+      }
+  
+      current = current.next;
+      index++;
+    }
+  };
+  ```
+
+- 虚拟头节点 + 快慢指针
+
+  ```javascript
+  /**
+   * Definition for singly-linked list.
+   * function ListNode(val, next) {
+   *     this.val = (val===undefined ? 0 : val)
+   *     this.next = (next===undefined ? null : next)
+   * }
+   */
+  /**
+   * @param {ListNode} head
+   * @param {number} n
+   * @return {ListNode}
+   */
+  var removeNthFromEnd = function(head, n) {
+      const dummyHead = new ListNode(0, head);
+      // 分别定义 慢指针 和 快指针
+      // 慢指针 指向元素以及左侧元素个数 + 快指针 指向元素以及右侧元素个数 = 链表长度
+      let slow = dummyHead;
+      let fast = dummyHead;
+  
+      // 将快指针移动 n 位
+      for(let i = 0; i < n; i++) {
+          fast = fast.next;
+      }
+  
+      // 将 快指针 移动 链表长度 - n 位
+      // 此时 慢指针指向倒数第 n + 1 位
+      while(fast && fast.next) {
+          fast = fast.next;
+          slow = slow.next;
+      }
+  
+      // 删除倒数第 n 位
+      slow.next = slow.next.next;
+  
+      return dummyHead.next;
+  };
+  ```
+
+### [反转链表](https://leetcode-cn.com/problems/reverse-linked-list/)
+
+- 双指针
+
+  ```javascript
+  /**
+   * Definition for singly-linked list.
+   * function ListNode(val, next) {
+   *     this.val = (val===undefined ? 0 : val)
+   *     this.next = (next===undefined ? null : next)
+   * }
+   */
+  /**
+   * @param {ListNode} head
+   * @return {ListNode}
+   */
+  var reverseList = function(head) {
+    let resultHead = null;
+    let currentOfHead = head;
+  
+    while(currentOfHead) {
+      // 临时存储节点
+      const node = resultHead;
+      resultHead = currentOfHead;
+      // 因为此时 resultHead 与 currentOfHead 指向的是同一节点, 因此需先改变 currentOfHead 指向
+      currentOfHead = currentOfHead.next;
+      resultHead.next = node;
+    }
+  
+    return resultHead;
+  };
+  ```
+  
+- 递归
+
+  ```javascript
+  /**
+   * Definition for singly-linked list.
+   * function ListNode(val, next) {
+   *     this.val = (val===undefined ? 0 : val)
+   *     this.next = (next===undefined ? null : next)
+   * }
+   */
+  /**
+   * @param {ListNode} head
+   * @return {ListNode}
+   */
+  var reverseList = function(head) {
+      if(!(head && head.next)) return head;
+  
+      let newHead = reverseList(head.next);
+      head.next.next = head;
+      head.next = null;
+  
+      return newHead;
+  };
+  ```
