@@ -1080,6 +1080,7 @@ LeetCode 的每日刷题记录, 记录题解以及思路.
       return newHead;
   };
   ```
+  
 ### 小结
 
 - 删除链表中的节点有两种方式:
@@ -1096,3 +1097,447 @@ LeetCode 的每日刷题记录, 记录题解以及思路.
 
   - 前插入节点
   - 递归
+
+## 2022-02-19 
+
+### [反转链表 II](https://leetcode-cn.com/problems/reverse-linked-list-ii/)
+
+- 双指针
+
+  ```javaScript
+  /**
+   * Definition for singly-linked list.
+   * function ListNode(val, next) {
+   *     this.val = (val===undefined ? 0 : val)
+   *     this.next = (next===undefined ? null : next)
+   * }
+   */
+  /**
+   * @param {ListNode} head
+   * @param {number} left
+   * @param {number} right
+   * @return {ListNode}
+   */
+  var reverseBetween = function(head, left, right) {
+      const dummyHead = new ListNode(0, head);
+      let fast = dummyHead.next;
+      let slow = dummyHead;
+  
+      for(let i = 0; i < left - 1; i++) {
+          slow = slow.next;
+          fast = fast.next;
+      }
+  
+      const tempNode = slow.next;
+  
+      for(let i = left; i < right; i++) {
+          const tempNode = slow.next;
+          slow.next = fast.next;
+          fast.next = fast.next.next;
+          slow.next.next = tempNode;
+      }
+  
+      tempNode.next = fast.next;
+  
+      return dummyHead.next;
+  };
+  ```
+
+### [环形链表](https://leetcode-cn.com/problems/linked-list-cycle/)
+
+- 记录元素
+
+  ```javaScript
+  /**
+   * Definition for singly-linked list.
+   * function ListNode(val) {
+   *     this.val = val;
+   *     this.next = null;
+   * }
+   */
+  
+  /**
+   * @param {ListNode} head
+   * @return {boolean}
+   */
+  var hasCycle = function(head) {
+      const itemList = [];
+      let current = head;
+  
+      while(current) {
+          if(itemList.includes(current)) return true;
+          itemList.push(current);
+          current = current.next;
+      }
+  
+      return false;
+  };
+  ```
+  
+- 双指针
+
+  ```javaScript
+  /**
+   * Definition for singly-linked list.
+   * function ListNode(val) {
+   *     this.val = val;
+   *     this.next = null;
+   * }
+   */
+  
+  /**
+   * @param {ListNode} head
+   * @return {boolean}
+   */
+  var hasCycle = function(head) {
+      if(head === null || head.next === null) return false;
+  
+      let fast = head;
+      let slow = head;
+  
+      while(true) {
+          if(fast === null || fast.next === null) return false;
+  
+          fast = fast.next.next;
+          slow = slow.next;
+  
+          if(fast === slow) return true;
+      }
+  };
+  ```
+
+### [环形链表 II](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
+
+- 记录元素
+
+  ```javaScript
+  /**
+   * Definition for singly-linked list.
+   * function ListNode(val) {
+   *     this.val = val;
+   *     this.next = null;
+   * }
+   */
+  
+  /**
+   * @param {ListNode} head
+   * @return {ListNode}
+   */
+  var detectCycle = function(head) {
+      const itemList = [];
+      let current = head;
+  
+      while(current) {
+          if(itemList.includes(current)) return current;
+          itemList.push(current);
+          current = current.next;
+      }
+  
+      return null;
+  };
+  ```
+
+- 快慢指针
+
+  ```javaScript
+  /**
+   * Definition for singly-linked list.
+   * function ListNode(val) {
+   *     this.val = val;
+   *     this.next = null;
+   * }
+   */
+  
+  /**
+   * @param {ListNode} head
+   * @return {ListNode}
+   */
+  var detectCycle = function(head) {
+      let fast = head;
+      let slow = head;
+  
+      while(fast && fast.next) {
+          fast = fast.next.next;
+          slow = slow.next;
+  
+          if(fast === slow) {
+              fast = head;
+  
+              while(fast !== slow) {
+                  fast = fast.next;
+                  slow = slow.next;
+              }
+  
+              return fast;
+          }
+      }
+  
+      return null;
+  };
+  ```
+
+## 2022-02-20 
+
+### [二叉树的前序遍历](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)\
+
+- 递归
+
+  ```javaScript
+  /**
+   * Definition for a binary tree node.
+   * function TreeNode(val, left, right) {
+   *     this.val = (val===undefined ? 0 : val)
+   *     this.left = (left===undefined ? null : left)
+   *     this.right = (right===undefined ? null : right)
+   * }
+   */
+  /**
+   * @param {TreeNode} root
+   * @return {number[]}
+   */
+  var preorderTraversal = function(root) {
+    const result = [];
+    const DFS = (root) => {
+      if(root) {
+        result.push(root.val);
+        DFS(root.left);
+        DFS(root.right);
+      } else return;
+    }
+  
+    DFS(root);
+  
+    return result;
+  };
+  ```
+
+- 栈保存根节点再展开
+
+  ```javaScript
+  /**
+   * Definition for a binary tree node.
+   * function TreeNode(val, left, right) {
+   *     this.val = (val===undefined ? 0 : val)
+   *     this.left = (left===undefined ? null : left)
+   *     this.right = (right===undefined ? null : right)
+   * }
+   */
+  /**
+   * @param {TreeNode} root
+   * @return {number[]}
+   */
+  var preorderTraversal = function(root) {
+      const result = [];
+      const stack = [];
+  
+      if(root) {
+          stack.push(root);
+  
+          while(stack.length) {
+              const current = stack.pop();
+              result.push(current.val);
+              
+              if(current.right) stack.push(current.right);
+              if(current.left) stack.push(current.left);
+          }
+      }
+  
+      return result;
+  };
+  ```
+
+### [二叉树的中序遍历](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
+
+- 递归
+- 栈保存根节点再展开
+
+  ```javaScript
+  /**
+   * Definition for a binary tree node.
+   * function TreeNode(val, left, right) {
+   *     this.val = (val===undefined ? 0 : val)
+   *     this.left = (left===undefined ? null : left)
+   *     this.right = (right===undefined ? null : right)
+   * }
+   */
+  /**
+   * @param {TreeNode} root
+   * @return {number[]}
+   */
+  var inorderTraversal = function(root) {
+      const result = [];
+      const stack = [];
+  
+      while(stack.length || root) {
+          while(root) {
+              stack.push(root);
+              root = root.left;
+          }
+  
+          root = stack.pop();
+  
+          result.push(root.val);
+  
+          root = root.right;
+      }
+      
+      return result;
+  };
+  ```
+
+### [二叉树的后序遍历](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
+
+- 递归
+- 栈记录元素再展开
+
+  ```javaScript
+  /**
+   * Definition for a binary tree node.
+   * function TreeNode(val, left, right) {
+   *     this.val = (val===undefined ? 0 : val)
+   *     this.left = (left===undefined ? null : left)
+   *     this.right = (right===undefined ? null : right)
+   * }
+   */
+  /**
+   * @param {TreeNode} root
+   * @return {number[]}
+   */
+  var postorderTraversal = function(root) {
+      if(!root) return [];
+  
+      const result = [];
+      const stack = [];
+  
+      stack.push(root);
+  
+      while(stack.length) {
+          const current = stack.pop();
+  
+          result.unshift(current.val);
+  
+          if(current.left) stack.push(current.left);
+          if(current.right) stack.push(current.right);
+      }
+  
+      return result;
+  };
+  ```
+
+## 2022-02-21
+
+### [二叉树的层序遍历](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
+
+- 队列保存每层节点
+
+  ```javaScript
+  /**
+   * Definition for a binary tree node.
+   * function TreeNode(val, left, right) {
+   *     this.val = (val===undefined ? 0 : val)
+   *     this.left = (left===undefined ? null : left)
+   *     this.right = (right===undefined ? null : right)
+   * }
+   */
+  /**
+   * @param {TreeNode} root
+   * @return {number[][]}
+   */
+  var levelOrder = function(root) {
+      if(!root) return [];
+  
+      const result = [];
+      const queue = [];
+  
+      queue.push(root);
+  
+      while(queue.length) {
+          const floor = [];
+          const length = queue.length;
+          for(let i = 0; i < length; i++) {
+              const current = queue.shift();
+  
+              floor.push(current.val);
+              
+              if(current.left) queue.push(current.left);
+              if(current.right) queue.push(current.right);
+          }
+  
+          result.push(floor);
+      }
+      
+      return result;
+  };
+  ```
+
+### [从上到下打印二叉树](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-lcof/)
+
+- 队列保存每层节点
+
+  ```javaScript
+  /**
+   * Definition for a binary tree node.
+   * function TreeNode(val) {
+   *     this.val = val;
+   *     this.left = this.right = null;
+   * }
+   */
+  /**
+   * @param {TreeNode} root
+   * @return {number[]}
+   */
+  var levelOrder = function(root) {
+      if(!root) return [];
+  
+      const result = [];
+      const queue = [];
+  
+      queue.push(root);
+  
+      while(queue.length) {
+          const length = queue.length;
+  
+          for(let i = 0; i < queue.length; i++) {
+              const current = queue.shift();
+  
+              result.push(current.val);
+  
+              if(current.left) queue.push(current.left);
+              if(current.right) queue.push(current.right);
+          }
+      }
+  
+      return result;
+  };
+  ```
+  
+### [二叉树的最大深度](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
+
+- dfs 向上传递深度
+
+  ```javaScript
+  /**
+   * Definition for a binary tree node.
+   * function TreeNode(val, left, right) {
+   *     this.val = (val===undefined ? 0 : val)
+   *     this.left = (left===undefined ? null : left)
+   *     this.right = (right===undefined ? null : right)
+   * }
+   */
+  /**
+   * @param {TreeNode} root
+   * @return {number}
+   */
+  var maxDepth = function(root) {
+    const dfs = (root) => {
+      if(!root) return 0;
+  
+      let leftDepth = dfs(root.left);
+      let rightDepth = dfs(root.right);
+  
+      return Math.max(leftDepth, rightDepth) + 1;
+    }
+  
+    return dfs(root);
+  };
+  ```
